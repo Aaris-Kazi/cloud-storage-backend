@@ -18,6 +18,9 @@ class UserRegisterViewSet(viewsets.ViewSet):
         
         if serializer.is_valid():  
             serializer.save()
+        else:
+            return JsonResponse(serializer.error_messages, status = status.HTTP_400_BAD_REQUEST)
+        
         return JsonResponse(serializer.data)
     
 
