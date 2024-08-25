@@ -16,7 +16,8 @@ class UserSerializer(serializers.ModelSerializer):
             email = validated_data["email"]
         )
         user.set_password(validated_data['password'])
-        return super().create(validated_data)
+        user.save()
+        return user
 
 class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
