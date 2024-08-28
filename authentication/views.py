@@ -40,6 +40,7 @@ class UserLoginViewSet(viewsets.ViewSet):
         
             refreshToken = RefreshToken.for_user(user=user)
             response = {
+                "username": user.username,
                 "refresh_token": str(refreshToken),
                 "access_token": str(refreshToken.access_token)
             }
