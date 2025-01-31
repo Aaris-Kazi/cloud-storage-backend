@@ -122,8 +122,8 @@ WSGI_APPLICATION = 'cloud_drive.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': DATABASE_NAME,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / f'{DATABASE_NAME}.sqlite3',
         'USER': USERNAME,
         'PASSWORD': PASSWORD,
         'HOST': HOSTNAME,
