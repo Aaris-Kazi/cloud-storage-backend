@@ -1,5 +1,5 @@
 asgiref==3.8.1
-Django==5.0.7
+Django==5.1.5
 django-cors-headers==4.4.0
 django-db-connection-pool==1.2.5
 django-filter==24.2
