@@ -1,28 +1,31 @@
-# Use an official Python image as base
-FROM python:3.10
+# For more information, please refer to https://aka.ms/vscode-docker-python
+FROM python:3-slim
 
-# Set environment variables to prevent Python from buffering outputs
+EXPOSE 8000
+
+# Keeps Python from generating .pyc files in the container
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
-# Install system dependencies
+# Install pip requirements
+COPY requirements.txt .
+COPY /run/etc.xml /app/run/etc.xml
+
 RUN apt-get update && apt-get install -y \
     default-libmysqlclient-dev build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory inside the container
+RUN python -m pip install -r requirements.txt
+
 WORKDIR /app
+COPY . /app
 
-# Copy the project files
-COPY . .
+# Creates a non-root user with an explicit UID and adds permission to access the /app folder
+# For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
+RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
+USER appuser
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Collect static files (if using Django static files)
-RUN python manage.py collectstatic --noinput
-
-# Expose port (WSO2 Choreo uses dynamic port allocation)
-EXPOSE 8000
-
-# Start the Gunicorn server
-CMD ["gunicorn", "cloud_drive.wsgi:application", "--bind", "0.0.0.0:8000"]
+# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "cloud_drive.wsgi"]
