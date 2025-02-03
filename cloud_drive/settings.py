@@ -31,6 +31,8 @@ HOSTNAME = configfile.getProperty(TAG+".mysql_hostname")
 DATABASE_NAME = configfile.getProperty(TAG+".mysql_database_name")
 USERNAME = configfile.getProperty(TAG+".mysql_user")
 PASSWORD = configfile.getProperty(TAG+".mysql_password")
+PORT = configfile.getProperty(TAG+".mysql_port")
+CA_CERT = configfile.getProperty(TAG+".sql_cert")
 
 
 
@@ -127,7 +129,12 @@ DATABASES = {
         'USER': USERNAME,
         'PASSWORD': PASSWORD,
         'HOST': HOSTNAME,
-        'PORT':'3306',
+        'PORT':PORT,
+        'OPTIONS': {
+            'ssl': {
+                'ca': CA_CERT
+            }
+        },
         'POOL_OPTIONS': {
             'POOL_SIZE': POOL_SIZE,
             'MAX_OVERFLOW': POOL_SIZE,
