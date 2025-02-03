@@ -39,7 +39,7 @@ DEBUG = configfile.getProperty(TAG+".debug")
 
 ALLOWED_HOSTS = ["*", "http://localhost:3000", "http://192.168.0.105:3000"]
 CORS_ALLOWED_ORIGINS = [
-    "*"
+    "http://localhost:3000", "http://192.168.0.105:3000"
 ]
 
 # Application definition
