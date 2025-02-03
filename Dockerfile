@@ -24,7 +24,9 @@ COPY cloud_drive.sqlite3 /app/cloud_drive.sqlite3
 RUN groupadd --gid 10001 appgroup && \
     useradd --uid 10001 --gid 10001 --create-home appuser
 
-RUN chown -R appuser:appgroup /app
+RUN chown appuser:appgroup /app/cloud_drive.sqlite3 && \
+    chmod 664 /app/cloud_drive.sqlite3
+
 USER 10001
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
