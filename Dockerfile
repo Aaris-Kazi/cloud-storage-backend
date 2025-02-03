@@ -18,6 +18,10 @@ RUN python -m pip install -r requirements.txt
 WORKDIR /app
 COPY . /app
 COPY /run/etc.xml /app/run/etc.xml
+COPY cloud_drive.sqlite3 /app/cloud_drive.sqlite3
+
+RUN chown -R appuser:appgroup /app
+USER 10001
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
