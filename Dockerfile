@@ -20,13 +20,17 @@ COPY . /app
 COPY /run/etc.xml /app/run/etc.xml
 COPY cloud_drive.sqlite3 /app/cloud_drive.sqlite3
 
+# Set a non-root user (fix for CKV_CHOREO_1)
+RUN groupadd --gid 10001 appgroup && \
+    useradd --uid 10001 --gid 10001 --create-home appuser
+
 RUN chown -R appuser:appgroup /app
 USER 10001
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
-RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
-USER appuser
+# RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
+# USER appuser
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "cloud_drive.wsgi"]
