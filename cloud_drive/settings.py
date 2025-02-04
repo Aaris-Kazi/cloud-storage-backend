@@ -34,7 +34,7 @@ HOSTNAME = configfile.getProperty(TAG+".mysql_hostname").replace("${MYSQL_HOSTNA
 DATABASE_NAME = configfile.getProperty(TAG+".mysql_database_name").replace("${MYSQL_DB}", getenv("MYSQL_DB") if getenv("MYSQL_DB") != None else "")
 USERNAME = configfile.getProperty(TAG+".mysql_user").replace("${MYSQL_USER}", getenv("MYSQL_USER") if getenv("MYSQL_USER") != None else "")
 PASSWORD = configfile.getProperty(TAG+".mysql_password").replace("${MYSQL_PASS}", getenv("MYSQL_PASS") if getenv("MYSQL_PASS") != None else "")
-PORT = configfile.getProperty(TAG+".mysql_port").replace("${PORT}", getenv("PORT"))
+PORT = configfile.getProperty(TAG+".mysql_port").replace("${PORT}", getenv("PORT") if getenv("PORT") != None else "")
 CA_CERT = configfile.getProperty(TAG+".sql_cert")
 
 
