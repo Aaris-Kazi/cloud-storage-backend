@@ -13,10 +13,12 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 from utils.ConfigReader import ConfigReader
+from dotenv import load_dotenv
+from os import getenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+load_dotenv()
 configfile = ConfigReader('run/etc.xml')
 TAG = 'file_system'
 
@@ -25,13 +27,14 @@ TAG = 'file_system'
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+hostname = getenv("MYSQL_HOSTNAME")
 SECRET_KEY = configfile.getProperty(TAG+".django_secret")
 POOL_SIZE = int(configfile.getProperty(TAG+".mysql_pool"))
-HOSTNAME = configfile.getProperty(TAG+".mysql_hostname")
-DATABASE_NAME = configfile.getProperty(TAG+".mysql_database_name")
-USERNAME = configfile.getProperty(TAG+".mysql_user")
-PASSWORD = configfile.getProperty(TAG+".mysql_password")
-PORT = configfile.getProperty(TAG+".mysql_port")
+HOSTNAME = configfile.getProperty(TAG+".mysql_hostname").replace("${MYSQL_HOSTNAME}", getenv("MYSQL_HOSTNAME"))
+DATABASE_NAME = configfile.getProperty(TAG+".mysql_database_name").replace("${MYSQL_DB}", getenv("MYSQL_DB"))
+USERNAME = configfile.getProperty(TAG+".mysql_user").replace("${MYSQL_USER}", getenv("MYSQL_USER"))
+PASSWORD = configfile.getProperty(TAG+".mysql_password").replace("${MYSQL_PASS}", getenv("MYSQL_PASS"))
+PORT = configfile.getProperty(TAG+".mysql_port").replace("${PORT}", getenv("PORT"))
 CA_CERT = configfile.getProperty(TAG+".sql_cert")
 
 
