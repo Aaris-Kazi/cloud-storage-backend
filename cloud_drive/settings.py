@@ -27,13 +27,13 @@ TAG = 'file_system'
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-hostname = getenv("MYSQL_HOSTNAME")
+
 SECRET_KEY = configfile.getProperty(TAG+".django_secret")
 POOL_SIZE = int(configfile.getProperty(TAG+".mysql_pool"))
-HOSTNAME = configfile.getProperty(TAG+".mysql_hostname").replace("${MYSQL_HOSTNAME}", getenv("MYSQL_HOSTNAME"))
-DATABASE_NAME = configfile.getProperty(TAG+".mysql_database_name").replace("${MYSQL_DB}", getenv("MYSQL_DB"))
-USERNAME = configfile.getProperty(TAG+".mysql_user").replace("${MYSQL_USER}", getenv("MYSQL_USER"))
-PASSWORD = configfile.getProperty(TAG+".mysql_password").replace("${MYSQL_PASS}", getenv("MYSQL_PASS"))
+HOSTNAME = configfile.getProperty(TAG+".mysql_hostname").replace("${MYSQL_HOSTNAME}", getenv("MYSQL_HOSTNAME") if getenv("MYSQL_HOSTNAME") != None else "")
+DATABASE_NAME = configfile.getProperty(TAG+".mysql_database_name").replace("${MYSQL_DB}", getenv("MYSQL_DB") if getenv("MYSQL_DB") != None else "")
+USERNAME = configfile.getProperty(TAG+".mysql_user").replace("${MYSQL_USER}", getenv("MYSQL_USER") if getenv("MYSQL_USER") != None else "")
+PASSWORD = configfile.getProperty(TAG+".mysql_password").replace("${MYSQL_PASS}", getenv("MYSQL_PASS") if getenv("MYSQL_PASS") != None else "")
 PORT = configfile.getProperty(TAG+".mysql_port").replace("${PORT}", getenv("PORT"))
 CA_CERT = configfile.getProperty(TAG+".sql_cert")
 
