@@ -1,43 +1,45 @@
-# For more information, please refer to https://aka.ms/vscode-docker-python
+# Use an official Python image
 FROM python:3.10
 
-EXPOSE 8000
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-# Keeps Python from generating .pyc files in the container
-ENV PYTHONDONTWRITEBYTECODE=1
-
-# Turns off buffering for easier container logging
-ENV PYTHONUNBUFFERED=1
-
-# Install pip requirements
-COPY requirements.txt .
-
-RUN apt-get update
-RUN apt-get install -y default-libmysqlclient-dev
-RUN apt-get install -y build-essential
-RUN apt-get install -y gcc
-RUN apt-get install -y python3-dev
-RUN apt-get install -y pkg-config
-RUN apt-get install -y libssl-dev
-
-RUN python -m pip install --upgrade pip
-RUN python -m pip install -r requirements.txt
-
-RUN groupadd --gid 10001 appgroup && \
-    useradd --uid 10001 --gid 10001 --create-home appuser
-
-USER 10001
-
+# Set the working directory
 WORKDIR /app
-COPY . /app
 
+# Install system dependencies in a single RUN command (reduces image layers)
+RUN apt-get update && apt-get install -y \
+    default-libmysqlclient-dev \
+    build-essential \
+    gcc \
+    pkg-config \
+    python3-dev \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copy application files
+COPY . .
+
+# Copy sensitive files
 COPY /run/etc.xml /app/run/etc.xml
 COPY /run/ca.pem /app/run/ca.pem
 
+# Create a non-root user (Fix for CKV_CHOREO_1)
+RUN groupadd --gid 10001 appgroup && \
+    useradd --uid 10001 --gid 10001 --create-home appuser && \
+    chown -R appuser:appgroup /app
 
-# Creates a non-root user with an explicit UID and adds permission to access the /app folder
-# For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
+# Switch to non-root user
+USER 10001
 
+# Expose port
+EXPOSE 8000
 
-# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
+# Start the Gunicorn server
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "cloud_drive.wsgi"]
