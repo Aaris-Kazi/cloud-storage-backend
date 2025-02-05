@@ -1,5 +1,5 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3-slim
+FROM python:3.10
 
 EXPOSE 8000
 
@@ -12,7 +12,13 @@ ENV PYTHONUNBUFFERED=1
 # Install pip requirements
 COPY requirements.txt .
 
-RUN apt-get install -y python3-dev default-libmysqlclient-dev build-essential pkg-confi
+RUN apt-get update
+RUN apt-get install -y default-libmysqlclient-dev
+RUN apt-get install -y build-essential
+RUN apt-get install -y gcc
+RUN apt-get install -y python3-dev
+RUN apt-get install -y pkg-config
+RUN apt-get install -y libssl-dev
 
 RUN python -m pip install --upgrade pip
 RUN python -m pip install -r requirements.txt
