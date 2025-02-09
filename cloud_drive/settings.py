@@ -36,16 +36,18 @@ USERNAME = configfile.getProperty(TAG+".mysql_user").replace("${MYSQL_USER}", ge
 PASSWORD = configfile.getProperty(TAG+".mysql_password").replace("${MYSQL_PASS}", getenv("MYSQL_PASS") if getenv("MYSQL_PASS") != None else "")
 PORT = configfile.getProperty(TAG+".mysql_port").replace("${PORT}", getenv("PORT") if getenv("PORT") != None else "")
 CA_CERT = configfile.getProperty(TAG+".sql_cert")
+CORS_LIST = configfile.getProperty(TAG+".cors_list")
+CORS_LIST: list = CORS_LIST.replace(" ", "").split(",")
 
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = configfile.getProperty(TAG+".debug")
 
-ALLOWED_HOSTS = ["*", "http://localhost:3000", "http://192.168.0.105:3000"]
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000", "http://192.168.0.105:3000"
-]
+
+ALLOWED_HOSTS = CORS_LIST
+CORS_ALLOWED_ORIGINS = CORS_LIST
+
 
 # Application definition
 
