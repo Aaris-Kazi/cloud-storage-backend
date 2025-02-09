@@ -18,6 +18,6 @@
         <debug>true</debug>
         <path>storage</path>
         <sql_cert>run/ca.pem</sql_cert>
-        <cors_list>http://localhost:3000, http://192.168.0.105:3000, https://67a90c3dce00bd000877ffb6--izak-cloud-storage.netlify.app</cors_list>
+        <cors_list>http://localhost:3000, http://192.168.0.105:3000, https://67a90c3dce00bd000877ffb6--izak-cloud-storage.netlify.app, cloud-drive-backend-3326780062.dp-production-cloudstoragebacken-57213-685541297</cors_list>
     </file_system>
 </data>
