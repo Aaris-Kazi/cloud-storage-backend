@@ -45,7 +45,7 @@ CORS_LIST: list = CORS_LIST.replace(" ", "").split(",")
 DEBUG = configfile.getProperty(TAG+".debug")
 
 
-ALLOWED_HOSTS = CORS_LIST
+ALLOWED_HOSTS = ["*"]
 CORS_ALLOWED_ORIGINS = CORS_LIST
 
 
