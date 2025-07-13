@@ -1,4 +1,5 @@
 
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from django.http import JsonResponse, QueryDict
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -10,7 +11,7 @@ from django.http import HttpResponse, FileResponse
 from wsgiref.util import FileWrapper
 
 from file_system.serializers import  MyStorageSerializers
-from utils.CreateDirectory import createDirectory, listDirectory
+from utils.CreateDirectory import createDirectory, deleteFile, listDirectory, deleteDirectory
 from utils.GetAuthUser import GetUser
 
 # Create your views here.
@@ -31,6 +32,24 @@ class DirectoryViewSets(viewsets.ViewSet):
             else:
                 path = super_path + user.username +"/"+ path
                 createDirectory(path, True)
+            
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+        
+        return JsonResponse({"status": "success"})
+    
+    permission_classes = [IsAuthenticated]
+    def delete(self, request: Request):
+        try:
+            user_id = GetUser(request)
+            user = User.objects.get(pk = user_id)
+            path = request.data.get("directory", "")
+            if path == "":
+                path = super_path + user.username
+                deleteDirectory(path)
+            else:
+                path = super_path + user.username +"/"+ path
+                deleteDirectory(path, True)
             
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
@@ -77,7 +96,22 @@ class FileNetworkModelViewset(viewsets.ViewSet):
             return JsonResponse({"status": "success"})
         else:
             return JsonResponse(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
-    
+
+    def delete(self, request: Request):
+        user_id = GetUser(request)
+        data: QueryDict = request.data
+        data._mutable = True
+        data.update({"user_id": int(user_id)})
+        name :str = data.get("name")
+        folder :str = data.get("folder")
+        user = User.objects.get(pk = user_id)
+        path = f"{super_path}{user.username}/{folder}/{name}"
+        instance = get_object_or_404(MyStorageModel, user_id = user_id, name = name)
+        instance.delete()
+        deleteFile(path)
+        
+        return JsonResponse({"status": "success"})
+        
     
     def list(self, request: Request):
         

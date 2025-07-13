@@ -1,20 +1,20 @@
 <data>
     <file_system>
         <django_secret>django-insecure-kku4+#m7v2g9$ys5q6=k%t57b+_ia)_q+8wxgj4s2#s9b6pne#</django_secret>
-        <mysql_hostname>${MYSQL_HOSTNAME}</mysql_hostname>
+        <!-- <mysql_hostname>${MYSQL_HOSTNAME}</mysql_hostname>
         <mysql_database_name>${MYSQL_DB}</mysql_database_name>
         <mysql_user>${MYSQL_USER}</mysql_user>
         <mysql_password>${MYSQL_PASS}</mysql_password>
         <mysql_port>${PORT}</mysql_port>
-        <mysql_pool>50</mysql_pool>
+        <mysql_pool>50</mysql_pool> -->
 
         <!-- Localhost -->
-        <!-- <mysql_hostname>localhost</mysql_hostname>
+        <mysql_hostname>localhost</mysql_hostname>
         <mysql_database_name>cloud_drive</mysql_database_name>
         <mysql_user>root</mysql_user>
         <mysql_password>12345</mysql_password>
         <mysql_port>3306</mysql_port>
-        <mysql_pool>50</mysql_pool> -->
+        <mysql_pool>50</mysql_pool>
         <debug>true</debug>
         <path>storage</path>
         <sql_cert>run/ca.pem</sql_cert>

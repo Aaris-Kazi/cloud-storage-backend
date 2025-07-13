@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
-from utils.ConfigReader import ConfigReader
+from utils import ConfigReader
 from dotenv import load_dotenv
 from os import getenv
 
@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
     # Apps
+    'utils',
     'authentication',
     'file_system',
     'health_app'
@@ -135,11 +136,11 @@ DATABASES = {
         'PASSWORD': PASSWORD,
         'HOST': HOSTNAME,
         'PORT':PORT,
-        'OPTIONS': {
-            'ssl': {
-                'ca': CA_CERT
-            }
-        },
+        # 'OPTIONS': {
+        #     'ssl': {
+        #         'ca': CA_CERT
+        #     }
+        # },
         'POOL_OPTIONS': {
             'POOL_SIZE': POOL_SIZE,
             'MAX_OVERFLOW': POOL_SIZE,

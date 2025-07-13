@@ -10,6 +10,21 @@ def createDirectory(path: str, nested:bool = False) -> bool:
     except FileExistsError:
         return False
     
+
+def deleteDirectory(path: str, nested:bool = False) -> bool:
+    try:
+        os.rmdir(path)
+        return True
+    except FileExistsError:
+        return False
+
+def deleteFile(path: str, nested:bool = False) -> bool:
+    try:
+        os.remove(path)
+        return True
+    except FileExistsError:
+        return False
+    
 def listDirectory(path: str) -> list:
     contents = []
     try:
