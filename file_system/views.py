@@ -7,8 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from django.contrib.auth.models import User
 from .models import MyStorageModel
-from django.http import HttpResponse, FileResponse
-from wsgiref.util import FileWrapper
+from django.http import FileResponse
 
 from file_system.serializers import  MyStorageSerializers
 from utils.CreateDirectory import createDirectory, deleteFile, listDirectory, deleteDirectory
