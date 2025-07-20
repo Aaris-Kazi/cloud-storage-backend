@@ -26,6 +26,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 RUN mkdir -p /app/storage && chmod -R 777 /app/storage  
 # Copy application files
 COPY . .
+RUN python manage.py collectstatic --noinput
 
 # Copy sensitive files
 COPY /run/etc.xml /app/run/etc.xml
