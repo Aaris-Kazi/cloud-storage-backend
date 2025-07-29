@@ -1,11 +1,17 @@
 
+import mimetypes
+import os
+from wsgiref.util import FileWrapper
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
-from django.http import JsonResponse, QueryDict
+from rest_framework.decorators import action
+from django.http import Http404, JsonResponse, QueryDict, StreamingHttpResponse
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from django.contrib.auth.models import User
+
+from cloud_drive import settings
 from .models import MyStorageModel
 from django.http import FileResponse
 
@@ -128,3 +134,61 @@ class FileNetworkModelViewset(viewsets.ViewSet):
             return response
         except Exception as e:
             return JsonResponse({'msg': str(e)}, status=status.HTTP_404_NOT_FOUND)
+
+
+class MediaStreamViewSet(viewsets.ViewSet):
+
+    """
+    Stream audio/video files with HTTP range support (for seeking and buffering).
+    Supports any media file under MEDIA_ROOT/aaris_kazi/{videos|music}/
+    """
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request: Request, pk = None):
+        media_type:str = request.query_params.get("media_type")
+        filename:str = request.query_params.get("filename")
+
+        if not media_type or not filename:
+            return JsonResponse({"status": "Missing media_type or filename"})
+
+        user_id = GetUser(request)
+
+        username:str = User.objects.get(pk = int(user_id))
+        file_path = os.path.join(settings.MEDIA_ROOT, "storage", str(username), media_type, filename)
+        
+        if not os.path.exists(file_path):
+            raise Http404("Media file not found.")
+        
+        get_object_or_404(MyStorageModel, user_id = user_id, name = filename)
+        
+        file_size = os.path.getsize(file_path)
+        content_type, _ = mimetypes.guess_type(file_path)
+        content_type = content_type or "application/octet-stream"
+
+        
+        range_header = request.headers.get("Range", "").strip()
+
+        if range_header:
+            try:
+                range_value = range_header.split("=")[-1]
+                start_str, end_str = range_value.split("-")
+                start = int(start_str)
+                end = int(end_str) if end_str else file_size - 1
+            except:
+                start, end = 0, file_size - 1
+
+            length = end - start + 1
+            with open(file_path, "rb") as f:
+                f.seek(start)
+                data = f.read(length)
+
+            response = StreamingHttpResponse(data, status=206, content_type=content_type)
+            response["Content-Range"] = f"bytes {start}-{end}/{file_size}"
+            response["Content-Length"] = str(length)
+        else:
+            response = StreamingHttpResponse(open(file_path, "rb"), content_type=content_type)
+            response["Content-Length"] = str(file_size)
+
+        response["Accept-Ranges"] = "bytes"
+        return response
+        
