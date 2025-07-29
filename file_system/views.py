@@ -4,7 +4,6 @@ import os
 from wsgiref.util import FileWrapper
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
-from rest_framework.decorators import action
 from django.http import Http404, JsonResponse, QueryDict, StreamingHttpResponse
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
