@@ -35,3 +35,20 @@ def listDirectory(path: str) -> list:
         print(e1)
         
     return contents
+    
+def listDirectoryV2(path: str) -> dict:
+    contents = {}
+    try:
+        for entry in os.listdir(path):
+            full_path: str = os.path.join(path, entry)
+            dirType:str = "file" if os.path.isfile(full_path) else "folder" 
+            data: list = contents.get(dirType, [])
+            data.append(entry)
+            contents.update({dirType: data})
+
+    except FileNotFoundError as e:
+        print(e)
+    except NotADirectoryError as e1:
+        print(e1)
+        
+    return contents

@@ -15,7 +15,7 @@ from .models import MyStorageModel
 from django.http import FileResponse
 
 from file_system.serializers import  MyStorageSerializers
-from utils.CreateDirectory import createDirectory, deleteFile, listDirectory, deleteDirectory
+from utils.CreateDirectory import createDirectory, deleteFile, deleteDirectory, listDirectoryV2
 from utils.GetAuthUser import GetUser
 
 # Create your views here.
@@ -46,6 +46,7 @@ class DirectoryViewSets(viewsets.ViewSet):
     def delete(self, request: Request):
         try:
             user_id = GetUser(request)
+            print(user_id)
             user = User.objects.get(pk = user_id)
             path = request.data.get("directory", "")
             if path == "":
@@ -66,7 +67,7 @@ class DirectoryViewSets(viewsets.ViewSet):
             user_id = GetUser(request)
             user = User.objects.get(pk = user_id)
             path = super_path + user.username
-            directories:list = listDirectory(path)
+            directories:dict = listDirectoryV2(path)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
         
@@ -77,7 +78,7 @@ class DirectoryViewSets(viewsets.ViewSet):
         user_id = GetUser(request)
         user = User.objects.get(pk = user_id)
         path = super_path + user.username +"/"+ pk
-        directories:list = listDirectory(path)
+        directories:dict = listDirectoryV2(path)
             
         return JsonResponse({"direcotries": directories})
     
