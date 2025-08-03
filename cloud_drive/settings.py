@@ -48,6 +48,7 @@ DEBUG = configfile.getProperty(TAG+".debug")
 
 ALLOWED_HOSTS = ["*"]
 CORS_ALLOWED_ORIGINS = CORS_LIST
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Application definition
