@@ -66,7 +66,11 @@ class DirectoryViewSets(viewsets.ViewSet):
         try:
             user_id = GetUser(request)
             user = User.objects.get(pk = user_id)
-            path = super_path + user.username
+
+            dir = request.query_params.get("directory", "")
+            if dir != "":
+                dir = "/" + dir
+            path = super_path + user.username + dir
             directories:dict = listDirectoryV2(path)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
