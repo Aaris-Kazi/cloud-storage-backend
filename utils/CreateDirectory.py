@@ -43,7 +43,7 @@ def listDirectoryV2(path: str) -> dict:
             full_path: str = os.path.join(path, entry)
             dirType:str = "file" if os.path.isfile(full_path) else "folder" 
             data: list = contents.get(dirType, [])
-            data.append(entry)
+            data.append({"name": entry})
             contents.update({dirType: data})
 
     except FileNotFoundError as e:
