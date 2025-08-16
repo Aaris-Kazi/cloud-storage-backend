@@ -1,4 +1,6 @@
 import os
+import shutil
+
 
 def createDirectory(path: str, nested:bool = False) -> bool:
     try:
@@ -12,11 +14,18 @@ def createDirectory(path: str, nested:bool = False) -> bool:
     
 
 def deleteDirectory(path: str, nested:bool = False) -> bool:
+    va = False
     try:
-        os.rmdir(path)
-        return True
-    except FileExistsError:
-        return False
+        shutil.rmtree(path)
+        # os.remove(path)
+        val =  True
+    except FileExistsError as e1:
+        raise e1
+    except Exception as e:
+        print(e)
+        raise e
+        
+    return val
 
 def deleteFile(path: str, nested:bool = False) -> bool:
     try:
