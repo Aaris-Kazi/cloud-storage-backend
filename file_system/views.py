@@ -115,7 +115,7 @@ class FileNetworkModelViewset(viewsets.ViewSet):
         folder :str = data.get("folder")
         user = User.objects.get(pk = user_id)
         path = f"{super_path}{user.username}/{folder}/{name}"
-        instance = get_object_or_404(MyStorageModel, user_id = user_id, name = name)
+        instance = get_object_or_404(MyStorageModel, user_id = user_id, name = name, file = path)
         instance.delete()
         deleteFile(path)
         
